@@ -24,7 +24,8 @@ export const authService = {
                 throw new Error(errorData.message || "Error en la autenticación");
             }
 
-            return await response.json();
+            const json = await response.json();
+            return json.data || json; // Fallback to json if data is missing
         } catch (error) {
             throw error;
         }

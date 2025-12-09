@@ -1,21 +1,40 @@
-<View style={styles.avatar}>
-  <Text style={styles.avatarText}>
-    {displayName.charAt(0)}
-  </Text>
-</View>
-      </View >
+import { useAuth } from "@/components/context/auth-context";
+import Button from "@/components/ui/button";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
 
-      <Text style={styles.label}>Nombre</Text>
-      <Text style={styles.value}>{displayName}</Text>
-      <Text style={styles.label}>Email</Text>
-      <Text style={styles.value}>{user.email}</Text>
-    </View >
+export default function ProfileScreen() {
+  const { user, signOut } = useAuth();
 
-    <View style={{ marginTop: 12 }} />
-    <Button text="Cerrar sesión" type="danger" onPress={signOut} />
+  if (!user) {
+    return null;
+  }
 
-  </View >
-);
+  const displayName = user.name || "Usuario autenticado";
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.heading}>Perfil del usuario</Text>
+      <View style={styles.card}>
+        <View style={styles.avatarContainer}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>
+              {displayName.charAt(0)}
+            </Text>
+          </View>
+        </View>
+
+        <Text style={styles.label}>Nombre</Text>
+        <Text style={styles.value}>{displayName}</Text>
+        <Text style={styles.label}>Email</Text>
+        <Text style={styles.value}>{user.email}</Text>
+      </View>
+
+      <View style={{ marginTop: 12 }} />
+      <Button text="Cerrar sesión" type="danger" onPress={signOut} />
+
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

@@ -42,11 +42,11 @@ export default function AddTaskScreen() {
   const handleCreateTask = async () => {
     if (!user || !user.token) return;
     if (!title.trim()) {
-      Alert.alert("Nombre del libro requerido", "Ingresa el nombre del libro");
+      Alert.alert("Nombre de la tarea requerido", "Ingresa el nombre de la tarea");
       return;
     }
     if (!photoUri) {
-      Alert.alert("Foto requerida", "Agrega una imagen del libro para la tarea.");
+      Alert.alert("Foto requerida", "Agrega una imagen para la tarea.");
       return;
     }
 
@@ -71,7 +71,7 @@ export default function AddTaskScreen() {
       router.replace("/(tabs)/");
     } catch (error: any) {
       console.error(error);
-      Alert.alert("Error", error.message || "No pudimos guardar el libro.");
+      Alert.alert("Error", error.message || "No pudimos guardar la tarea.");
     } finally {
       setIsSaving(false);
     }
@@ -79,7 +79,7 @@ export default function AddTaskScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={{ fontSize: 26, fontWeight: "700", marginBottom: 12, color: "#374151", textAlign: "center" }}>Agregar libro</Text>
+      <Text style={{ fontSize: 26, fontWeight: "700", marginBottom: 12, color: "#374151", textAlign: "center" }}>Agregar tarea</Text>
 
       <View style={styles.container}>
         <TaskForm

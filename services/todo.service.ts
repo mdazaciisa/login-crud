@@ -13,37 +13,67 @@ export const todoService = {
             throw new Error("Error al obtener las tareas");
         }
 
-        return await response.json();
+        const json = await response.json();
+        return json.data || [];
     },
 
     async createTodo(token: string, title: string, imageUri: string, location: { latitude: number; longitude: number }): Promise<Task> {
-        const formData = new FormData();
-        formData.append("title", title);
-        formData.append("location", JSON.stringify(location));
+        // For web, we need to send JSON with base64 image
+        // For native, we use FormData
+        const isWeb = typeof document !== 'undefined';
 
-        // Prepare image data
-        const filename = imageUri.split('/').pop() || "photo.jpg";
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : `image`;
+        if (isWeb) {
+            // Web: Send as JSON with base64
+            const response = await fetch(`${API_URL}/todos`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title,
+                    location,
+                    image: imageUri, // On web, this is already a data URL or blob URL
+                }),
+            });
 
-        // @ts-ignore: React Native FormData expects specific object structure for files
-        formData.append("image", { uri: imageUri, name: filename, type });
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al crear la tarea: ${errorText}`);
+            }
 
-        const response = await fetch(`${API_URL}/todos`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "multipart/form-data",
-            },
-            body: formData,
-        });
+            const json = await response.json();
+            return json.data || json;
+        } else {
+            // Native: Use FormData
+            const formData = new FormData();
+            formData.append("title", title);
+            formData.append("location", JSON.stringify(location));
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Error al crear la tarea: ${errorText}`);
+            const filename = imageUri.split('/').pop() || "photo.jpg";
+            const match = /\.(\w+)$/.exec(filename);
+            const type = match ? `image/${match[1]}` : `image`;
+
+            // @ts-ignore: React Native FormData expects specific object structure for files
+            formData.append("image", { uri: imageUri, name: filename, type });
+
+            const response = await fetch(`${API_URL}/todos`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data",
+                },
+                body: formData,
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Error al crear la tarea: ${errorText}`);
+            }
+
+            const json = await response.json();
+            return json.data || json;
         }
-
-        return await response.json();
     },
 
     async updateTodo(token: string, id: string, updates: Partial<Task>): Promise<Task> {
@@ -60,7 +90,8 @@ export const todoService = {
             throw new Error("Error al actualizar la tarea");
         }
 
-        return await response.json();
+        const json = await response.json();
+        return json.data || json;
     },
 
     async deleteTodo(token: string, id: string): Promise<void> {

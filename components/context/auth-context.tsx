@@ -31,11 +31,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const signIn = async (email: string, password: string): Promise<AuthResult> => {
     try {
+      console.log("Calling authService.login with", email);
       const response = await authService.login(email, password);
+      console.log("authService response:", response);
 
       const authenticatedUser: User = {
-        email: response.user.email,
-        name: response.user.name,
+        email: response.user?.email || response.email || email,
+        name: response.user?.name || response.name || email.split('@')[0],
         token: response.token
       };
 

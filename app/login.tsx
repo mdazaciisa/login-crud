@@ -12,11 +12,18 @@ export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [errorMsg, setErrorMsg] = useState("");
+
   const handleLogin = async () => {
+    setErrorMsg(""); // Clear previous errors
+    console.log("Login button pressed");
     const result = await signIn(email, password);
+    console.log("Sign in result:", result);
 
     if (!result.success) {
-      Alert.alert("Error", result.error ?? "Email o contraseña incorrectos");
+      const msg = result.error ?? "Email o contraseña incorrectos";
+      setErrorMsg(msg);
+      Alert.alert("Error", msg);
       return;
     }
 
@@ -56,6 +63,8 @@ export default function LoginScreen() {
             secureTextEntry
             placeholderTextColor="#9CA3AF"
           />
+
+          {errorMsg ? <Text style={{ color: 'red', marginBottom: 10, textAlign: 'center' }}>{errorMsg}</Text> : null}
 
           <Button text="Iniciar sesión" type="login" onPress={handleLogin} />
         </Animated.View>
