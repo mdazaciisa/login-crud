@@ -85,12 +85,12 @@ Abre el emulador o la app Expo Go para probar la aplicación.
 ### Pantalla de inicio - Biblioteca de usuario
 <p align="center">
   <img src="./assets/readme/todo.jpeg" width="220" />
-  <img src="./assets/readme/todo2.jpeg" width="220" />
+  <img src="./assets/readme/todo1.jpeg" width="220" />
 </p>
 
 ### Pantalla para agregar libro
 <p align="center">
-  <img src="./assets/readme/add-task1.jpeg" width="220" />
+  <img src="./assets/readme/add-task1.jpg" width="220" />
   <img src="./assets/readme/add-task2.jpeg" width="220" />
 </p>
 
